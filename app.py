@@ -18,7 +18,7 @@ pd.set_option('display.width', None)
 app = Flask(__name__)
 app.config['SECRET_KEY'] = '234569876'
 
-# Database configuration (MySQL)
+
 db_config = {
     'user': 'Ekaterina Puzankova',
     'password': 'EkaterinaPuzankova!!!',
@@ -37,23 +37,21 @@ else:
 cursor = cnx.cursor()
 
 # Bot setup
-TOKEN = '7714638685:AAEKNyXvkTz2l_ZaKR0Tg7bY-1kp6o-HwPA'  # Replace with your bot token
+TOKEN = '7714638685:AAEKNyXvkTz2l_ZaKR0Tg7bY-1kp6o-HwPA'  
 bot = telebot.TeleBot(TOKEN)
 
-# Create SQLTable instance for users table
-users_table = SQLTable(db_config, 'users')  # Adjust table name if needed
 
-# Global variable for user data (not really needed)
-# user_data = {} 
+users_table = SQLTable(db_config, 'users')  
 
-# Logging function
+
+
 def log_message(chat_id, message):
     date = datetime.now().strftime("%Y-%m-%d")
     filename = f"chat_{chat_id}_{date}.txt"
     with open(filename, "a", encoding="utf-8") as f:
         f.write(f"{datetime.now().strftime('%H:%M:%S')} - {message}\n")
 
-# Send message function
+
 def send_message(chat_id, text):
     bot.send_message(chat_id, text)
 
@@ -262,16 +260,16 @@ def view_users():
     # Получение данных в виде списка словарей
     users_data = [dict(zip([column[0] for column in cursor.description], row)) for row in cursor]
 
-    # Закрытие соединения
+
     cursor.close()
     cnx.close()
 
     # Отображение данных в таблице
     return render_template('view_users.html', users=users_data)
 
-# Запускаем приложение Flask
+
 if __name__ == '__main__':
     app.run(debug=True)
-    # Запускаем бота в отдельном потоке
+  
     bot.polling(none_stop=True)
 
